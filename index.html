@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<style>
+    #background {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .stars-drop,
+    .stars-drop2,
+    .stars-drop3 {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+    }
+
+    .star {
+        position: absolute;
+        top: -10px;
+        border-radius: 50%;
+        animation: starFall linear infinite;
+        opacity: 0;
+    }
+
+    @keyframes starFall {
+        0% {
+            transform: translateY(0);
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(110vh);
+            opacity: 0;
+        }
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s ease;
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .tooltip_container {
+        background: #222;
+        color: white;
+    }
+
+    button {
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div id="background"></div>
+    <div class="zalo">
+        <div class="avatar">
+            <img src="duong.jpg" alt="">
+        </div>
+        <div class="name">
+            <h2>Dương</h2>
+        </div>
+        <div class="ghichu">
+            <span>Remember You!</span>
+        </div>
+        <div class="canvar">
+            <p id="dlist-text"></p>
+        </div>
+        <div class="forMat-icon">
+            <div class="item">
+                <div class="icon">
+                    <i class="ri-message-3-line"></i>
+                </div>
+                <p>Nhắn tin</p>
+            </div>
+            <div class="item">
+                <div class="icon">
+                    <i class="ri-phone-line"></i>
+                </div>
+                <p>Gọi điện</p>
+            </div>
+            <div class="item" onclick="location.href=''">
+                <div class="icon">
+                    <i class="ri-user-3-line"></i>
+                </div>
+                <p>Thông tin</p>
+            </div>
+            <div class="item">
+                <div class="icon">
+                    <i class="ri-user-add-line"></i>
+                </div>
+                <p>Kết bạn</p>
+            </div>
+        </div>
+        <audio src="mt.mp3" id="audio"></audio>
+        <script>
+            let isNhanBan = true;
+            let audio = document.getElementById('audio');
+
+            let a = [90, 50, 7, 10, 45, 15, 3];
+            let N = 6;
+
+            let max = 0;
+            let inex;
+            let i, j, temp;
+
+            for (i = max; i < N; ++i) {
+                inex = i;
+                for (j = j + 1; j < N; ++j) {
+                    if (a[i] < a[inex]) {
+                        inex = j;
+                    }
+                }
+
+                if (a[inex] != i) {
+                    temp = a[i];
+                    a[i] = a[inex];
+                    a[inex] = temp;
+
+                    isNhanBan == true
+                        ? isThatTimeAudio() : isThatTimePau();
+                }
+            }
+
+            document.body.addEventListener('click', function(){
+                isThatTimeAudio();
+            });
+
+            function isThatTimeAudio() {
+                if (audio) {
+                    try {
+                        audio.play();
+                    } catch (error) { }
+                }
+            }
+
+            function isThatTimePau() {
+                if (audio) {
+                    try {
+                        audio.pause();
+                    } catch (error) { }
+                }
+            }
+
+           window.onload = isThatTimeAudio;
+        </script>
+
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            if (typeof tippy !== 'undefined') {
+                tippy('[data-tippy-content]', {
+                    theme: 'tooltip_container',
+                    arrow: false,
+                    allowHTML: true,
+                    maxWidth: '92vw',
+                    animation: 'scale',
+                    delay: [0, 150],
+                });
+            }
+
+            const background = document.getElementById('background');
+
+            if (background) {
+                background.innerHTML = `
+                    <div class="stars-drop" id="stars-drop-big"></div>
+                    <div class="stars-drop2" id="stars-drop-big2"></div>
+                    <div class="stars-drop3" id="stars-drop-big3"></div>
+                    <div class="stars-drop3" id="stars-drop-big4"></div>
+                    <div class="stars-drop3" id="stars-drop-big5"></div>
+                `;
+
+                createStars('stars-drop-big', 700, '#0099ff');
+                createStars('stars-drop-big2', 200, '#f7e53f');
+                createStars('stars-drop-big3', 100, '#fff');
+                createStars('stars-drop-big4', 100, '#CCFFFF');
+                createStars('stars-drop-big5', 100, '#00bfff');
+            }
+
+            revealElements();
+        });
+
+        function revealElements() {
+            const reveals = document.querySelectorAll('.reveal');
+
+            reveals.forEach(function (element) {
+                element.classList.add('active');
+            });
+        }
+
+        function createStars(containerId, count, color, text, icon) {
+            const container = document.getElementById(containerId);
+
+            if (!container) return;
+
+            const fragment = document.createDocumentFragment();
+
+            let boxShadowColor = '#fff';
+
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('span');
+
+                star.className = 'star';
+
+                const size = Math.random() * 2 + 1;
+                const duration = Math.random() * 8 + 4;
+                const delay = Math.random() * 12;
+
+                star.style.left = Math.random() * 100 + '%';
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.background = color;
+                star.style.boxShadow = `0 0 6px ${color}`;
+                star.style.animationDuration = duration + 's';
+                star.style.animationDelay = '-' + delay + 's';
+                star.style.boxShadow = `0 0 10px ${boxShadowColor}`;
+
+                fragment.appendChild(star);
+            }
+
+            container.appendChild(fragment);
+        }
+
+        function showSuccessPopup(message) {
+            alert(message);
+        }
+
+        function showErrorPopup(message) {
+            alert(message);
+        }
+    </script>
+
+
+    <script>
+        const titleText = "Remember You!";
+        let index = 0;
+        let isDeleting = false;
+
+        function typeWriter() {
+            if (isDeleting) {
+                document.title = titleText.substring(0, index);
+                index--;
+            } else {
+                document.title = titleText.substring(0, index + 1);
+                index++;
+            }
+
+            if (!isDeleting && index === titleText.length) {
+                isDeleting = true;
+                setTimeout(typeWriter, 0);
+                return;
+            } else if (isDeleting && index === 0) {
+                isDeleting = false;
+                setTimeout(typeWriter, 0);
+                return;
+            }
+
+            const speed = isDeleting ? 350 : 350;
+            setTimeout(typeWriter, speed);
+        }
+
+        window.onload = typeWriter;
+    </script>
+</body>
+
+</html>
